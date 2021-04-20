@@ -35,7 +35,7 @@
     function _startGame(name, size) {
         // TODO Step 3.2: use template literals
         // TODO Step 7: change path to: `game?name=${name}=name&size=${size}`
-        window.location = './game.html?name=' + name + '&size=' + size;
+        window.location = `../game/game.html?name=${name}&size=${size}`;
     }
 
     // put component in global scope, tu be runnable right from the HTML.
