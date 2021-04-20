@@ -1,4 +1,4 @@
-// TODO Step 7 import "./game.component.html"
+// TODO Step 7 import "./game.components.html"
 
 (function() {    // TODO Step 7 remove this closure
     var environment = {
@@ -9,6 +9,7 @@
 
     // TODO Step 3.1 create a class
     /* class GameComponent constructor */
+
     function GameComponent() {
         // gather parameters from URL
         var params = parseUrl();
@@ -79,10 +80,10 @@
         clearInterval(this._timer);
 
         setTimeout(function() {  // TODO Step 3.2: use arrow function.
-            // TODO Step 1: replace with '../score.component.html' location
+            // TODO Step 1: replace with '../score.components.html' location
             // TODO Step 3.2: use template literals
             // TODO Step 7: change path to: `score?name=${this._name}&size=${this._size}'&time=${timeElapsedInSeconds}`;
-            window.location = 'score.html?name=' + this._name + '&size=' + this._size + '&time=' + timeElapsedInSeconds;
+            window.location = '../score/score.component.html?name=' + this._name + '&size=' + this._size + '&time=' + timeElapsedInSeconds;
         }.bind(this), 750);    // TODO Step 3.2: Why bind(this)?
     }
 
@@ -181,7 +182,7 @@
         return result;
     }
 
-    // put component in global scope, tu be runnable right from the HTML.
+    // put components in global scope, tu be runnable right from the HTML.
     // TODO Step 7: export GameComponent
     window.GameComponent = GameComponent;
 })();

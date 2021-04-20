@@ -1,4 +1,4 @@
-// TODO Step 7 import "./score.component.html"
+// TODO Step 7 import "./score.components.html"
 
 (function() {      // TODO Step 7 remove this closure
 
@@ -40,7 +40,7 @@
         return result;
     }
 
-    // put component in global scope, tu be runnable right from the HTML.
+    // put components in global scope, tu be runnable right from the HTML.
     // TODO Step 7 export ScoreComponent
     window.ScoreComponent = ScoreComponent;
 })();

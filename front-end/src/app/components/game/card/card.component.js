@@ -1,4 +1,4 @@
-// TODO Step 7 import "./card.component.html"
+// TODO Step 7 import "./card.components.html"
 
 (function() {   // TODO Step 7 remove this closure
 
@@ -13,15 +13,14 @@
 
         this._id = id;
 
-        // TODO Step 7: We can access the element from the component class that built an element from the template
+        // TODO Step 7: We can access the element from the components class that built an element from the template
         // TODO Step 7: don't use document.getElementById anymore
         this._elt = document.getElementById('card-template').content.cloneNode(true).firstElementChild;
         this._imageElt = this._elt.querySelector('.card-wrapper');
-        // TODO Step 1: Change images location to ./card/assets/***.png
         // TODO Step 3.2: use template literals
         // TODO Step 7: Update the path for images
-        this._imageElt.querySelector('img.front-face').src = '../../assets/cards/card-' + this._id + '.png';
-        this._imageElt.querySelector('img.back-face').src = '../../assets/cards/back.png';
+        this._imageElt.querySelector('img.front-face').src = 'card/assets/card-' + this._id + '.png';
+        this._imageElt.querySelector('img.back-face').src = 'card/assets/back.png';
     }
 
     /* method CardComponent.getElement */
@@ -70,7 +69,7 @@
     });
 
 
-    // put component in global scope, tu be runnable right from the HTML.
+    // put components in global scope, tu be runnable right from the HTML.
     // TODO Step 7 export CardComponent
     window.CardComponent = CardComponent;
 })();

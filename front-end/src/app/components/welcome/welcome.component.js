@@ -1,4 +1,4 @@
-// TODO Step 7 import "./welcome.component.html"
+// TODO Step 7 import "./welcome.components.html"
 
 (function() {   // TODO Step 7 remove this closure
 
@@ -35,10 +35,10 @@
     function _startGame(name, size) {
         // TODO Step 3.2: use template literals
         // TODO Step 7: change path to: `game?name=${name}=name&size=${size}`
-        window.location = `../game/game.html?name=${name}&size=${size}`;
+        window.location = `../game/game.component.html?name=${name}&size=${size}`;
     }
 
-    // put component in global scope, tu be runnable right from the HTML.
+    // put components in global scope, tu be runnable right from the HTML.
     // TODO Step 7 export WelcomeComponent
     window.WelcomeComponent = WelcomeComponent
 })();
