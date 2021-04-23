@@ -5,7 +5,7 @@
     /* class ScoreComponent constructor */
     class ScoreComponent {
         constructor() {
-            var params = this.parseUrl();
+            const params = this.parseUrl();
             this.name = params.name;
             this.size = parseInt(params.size);
             this.time = parseInt(params.time);
@@ -18,20 +18,16 @@
         }
 
         parseUrl() {
-            var url = window.location;
-            var query = url.href.split('?')[1] || '';
-            var delimiter = '&';
-            var result = {};
-            var parts = query
-                .split(delimiter);
-            // TODO Step 3.3: Use Array.map() & Array.reduce()
-            for (var i in parts) {
-                var item = parts[i];
-                var kv = item.split('=');
-                result[kv[0]] = kv[1];
-            }
 
-            return result;
+            return (window.location.href
+                .split('?')[1] || '')
+                .split('&')
+                .map(element => element.split('='))
+                .reduce((acc, [key, value]) => {
+
+                    acc[key] = value;
+                    return acc;
+                }, {});
         }
 
         // TODO Step 6 implement getTemplate() {}

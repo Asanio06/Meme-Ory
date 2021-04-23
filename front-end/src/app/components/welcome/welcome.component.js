@@ -9,17 +9,17 @@
         }
 
         init() {
-            var form = document.querySelector('form.form-signin');
+            const form = document.querySelector('form.form-signin');
 
-            form.addEventListener('submit', (event) =>{     // TODO Step 3.2: use arrow function
+            form.addEventListener('submit', (event) =>{
 
                 event.preventDefault();
                 if (form.checkValidity() === false) {
                     event.stopPropagation();
                     form.classList.add('was-validated');
                 } else {
-                    var name = event.srcElement.querySelector('#nickname').value;
-                    var size = parseInt(event.srcElement.querySelector('#size').value);
+                    const name = event.srcElement.querySelector('#nickname').value;
+                    const size = parseInt(event.srcElement.querySelector('#size').value);
 
                     this._startGame(name, size);
                 }
@@ -31,7 +31,7 @@
         // TODO Step 6 implement getTemplate() {}
 
          _startGame(name, size) {
-            // TODO Step 3.2: use template literals
+
             // TODO Step 7: change path to: `game?name=${name}=name&size=${size}`
             window.location = `../game/game.component.html?name=${name}&size=${size}`;
         }

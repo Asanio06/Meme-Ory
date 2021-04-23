@@ -1,7 +1,7 @@
 // TODO Step 7 import "./game.components.html"
 
 (function() {    // TODO Step 7 remove this closure
-    var environment = {
+    const environment = {
         api: {
             host: 'http://localhost:8081'
         }
@@ -12,7 +12,7 @@
 
     class GameComponent{
         constructor() {
-            var params = parseUrl();
+            let params = this.parseUrl();
 
             // save player name & game ize
             this._name = params.name;
@@ -21,75 +21,60 @@
             this._matchedPairs = 0;
         }
 
-        init() {
+        async init() {
             // fetch the cards configuration from the server
-            this.fetchConfig((function(config) { // TODO Step 3.2: use arrow function
-                this._config = config;
 
-                // create a card out of the config
-                this._cards = []; // TODO Step 3.3: use Array.map()
-                for (var i in this._config.ids) {
-                    this._cards[i] = new CardComponent(this._config.ids[i]);
-                }
+            const config = await this.fetchConfig();
+            this._config = config;
 
-                this._boardElement = document.querySelector('.cards');
+            // create a card out of the config
 
-                for (var i in this._cards) { // TODO Step 3.3: use Array.forEach()
-                    (function() {
-                        var card = this._cards[i];
-                        this._boardElement.appendChild(card.getElement());
-                        card.getElement().addEventListener('click', function() {this._flipCard(card) }.bind(this)); // TODO use arrow function.
-                    }).bind(this)();
-                }
+            this._cards = this._config.ids.map((id)=>{
+                return new CardComponent(id);
+            })
 
-                this.start();
-            }).bind(this));
+            this._boardElement = document.querySelector('.cards');
+
+
+            this._cards.forEach((card)=>{
+                this._boardElement.appendChild(card.getElement());
+                card.getElement().addEventListener('click', () =>{this._flipCard(card) });
+            })
+
+
+            this.start();
+
         }
+
+
         start() {
             this._startTime = Date.now();
-            var seconds = 0;
-            // TODO Step 3.2: use template literals
-            document.querySelector('nav .navbar-title').textContent = 'Player: ' + this._name + '. Elapsed time: ' + seconds++;
+            let seconds = 0;
+            document.querySelector('nav .navbar-title').textContent = `Player: ${this._name}. Elapsed time: ${seconds++}`;
 
-            this._timer = setInterval(function() { // TODO Step 3.2: use arrow function
-                // TODO Step 3.2: use template literals
-                document.querySelector('nav .navbar-title').textContent = 'Player: ' + this._name + '. Elapsed time: ' + seconds++;
-            }.bind(this), 1000);
+            this._timer = setInterval(() => {
+                document.querySelector('nav .navbar-title').textContent = `Player: ${this._name}. Elapsed time: ${seconds++}`;
+            }, 1000);
         }
-        fetchConfig(cb) {
-            var xhr = typeof XMLHttpRequest != 'undefined'
-                ? new XMLHttpRequest()
-                : new ActiveXObject('Microsoft.XMLHTTP');
 
-            // TODO Step 3.2 use template literals
-            xhr.open('get', environment.api.host + '/board?size=' + this._size, true);
+        async fetchConfig() {
 
-            // TODO Step 3.2 use arrow function
-            xhr.onreadystatechange = function() {
-                var status;
-                var data;
-                // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
-                if (xhr.readyState == 4) { // `DONE`
-                    status = xhr.status;
-                    if (status == 200) {
-                        data = JSON.parse(xhr.responseText);
-                        cb(data);
-                    } else {
-                        throw new Error(status)
-                    }
-                }
-            };
-            xhr.send();
+            return fetch(`${environment.api.host}/board?size=${this._size}`, {
+                method: 'GET'
+            })
+                .then((response)=> response.json())
+                .catch((error) => {throw error});
+
         }
+
         gotoScore() {
-            var timeElapsedInSeconds = Math.floor((Date.now() - this._startTime )/1000);
+            const timeElapsedInSeconds = Math.floor((Date.now() - this._startTime )/1000);
             clearInterval(this._timer);
 
-            setTimeout(function() {  // TODO Step 3.2: use arrow function.
-                // TODO Step 3.2: use template literals
+            setTimeout(() =>{
                 // TODO Step 7: change path to: `score?name=${this._name}&size=${this._size}'&time=${timeElapsedInSeconds}`;
-                window.location = '../score/score.component.html?name=' + this._name + '&size=' + this._size + '&time=' + timeElapsedInSeconds;
-            }.bind(this), 750);    // TODO Step 3.2: Why bind(this)?
+                window.location = `../score/score.component.html?name=${this._name}&size=${this._size}&time=${timeElapsedInSeconds}`;
+            }, 750);
         }
         _flipCard(card) {
             if (this._busy) {
@@ -128,8 +113,7 @@
 
                     // cards did not match
                     // wait a short amount of time before hiding both cards
-                    // TODO Step 3.2 use arrow function
-                    setTimeout(function() {
+                    setTimeout(()=> {
                         // hide the cards
                         this._flippedCard.flip();
                         card.flip();
@@ -137,32 +121,25 @@
 
                         // reset flipped card for the next turn.
                         this._flippedCard = null;
-                    }.bind(this), 500);
+                    }, 500);
                 }
             }
+        }
+        parseUrl() {
+
+            return (window.location.href
+                .split('?')[1] || '')
+                .split('&')
+                .map(element => element.split('='))
+                .reduce((acc, [key, value]) => {
+
+                    acc[key] = value;
+                    return acc;
+                }, {});
         }
     }
 
     // TODO Step 6 implement getTemplate() {}
-
-
-    function parseUrl() {
-        var url = window.location;
-        var query = url.href.split('?')[1] || '';
-        var delimiter = '&';
-        var result = {};
-
-        var parts = query
-            .split(delimiter);
-        // TODO Step 3.3: Use Array.map() & Array.reduce()
-        for (var i in parts) {
-            var item = parts[i];
-            var kv = item.split('=');
-            result[kv[0]] = kv[1];
-        }
-
-        return result;
-    }
 
     // put components in global scope, tu be runnable right from the HTML.
     // TODO Step 7: export GameComponent
