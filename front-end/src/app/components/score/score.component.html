@@ -1,51 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>MÈME ory</title>
-    <!-- TODO Step 1: change css location to '../../styles/style.css' -->
-    <link rel="stylesheet" href="../../styles/style.css">
-    <link rel="stylesheet" href="../../../../node_modules/bootstrap/dist/css/bootstrap.css">
-    <!-- TODO Step 1: create css './score.css' -->
-    <link rel="stylesheet" href="./score.component.css">
-
-</head>
-
-<body class="d-flex flex-column">
-<nav class="navbar bg-primary mb-3 shadow">
-    <a class="navbar-brand d-flex" href="#">
-        <img class="d-inline-block align-top" src="../../../assets/logo_take_my_money.png" alt="logo">
-        <span class="align-self-center m-2">MÈME ory</span>
-    </a>
-    <span class="navbar-title"></span>
-</nav>
-
-<div class="container-fluid flex-grow-1 overflow-auto">
-    <!-- TODO Step 7: Keep only this element -->
-    <main class="score-cmp">
-        <div class="d-flex p-3">
-            <div class="flex-grow-1">
-                <h3 class="congrats">CONGRATS<br/><span id="name"></span></h3>
-            </div>
-            <div>
-                <img src="./happy_homer.jpg" class="happy">
-                <p class="size"><span id="size"></span> pairs</p>
-                <p class="time"><span id="time"></span>s</p>
-            </div>
+<main class="score-cmp">
+    <div class="d-flex p-3">
+        <div class="flex-grow-1">
+            <h3 class="congrats">CONGRATS<br/><span id="name"></span></h3>
         </div>
-    </main>
-
-    <footer class="navbar position-absolute fixed-bottom bg-dark">
-        <span>&copy The MÈME ory corporation | 2019</span>
-    </footer>
-</div>
-</body>
-
-<!-- link to welcome controller -->
-<!-- TODO Step 7: remove all <script> tags -->
-<script src="./score.component.js"></script>
-<script>
-    new ScoreComponent().init();
-</script>
-</html>
+        <div>
+            <img class="happy" src="./happy_homer.jpg">
+            <p class="size"><span id="size"></span> pairs</p>
+            <p class="time"><span id="time"></span>s</p>
+        </div>
+    </div>
+</main>
 
