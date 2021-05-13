@@ -1,7 +1,13 @@
 /*****
  * GLOBAL STYLE
  */
+
+$primary: #cb2468;
+@import "~bootstrap/scss/bootstrap";
 @import "./color";
+
+
+
 
 body {
     background-color: #F5F5F5;
@@ -10,7 +16,9 @@ body {
     height: 100%;
     overflow: hidden;
 }
-
+.navbar{
+    background-color: $primary-background ;
+}
 .navbar-brand img {
     height: 50px;
 }
@@ -21,7 +29,7 @@ body > main {
 
 /* global style */
 .bg-primary * {
-    color: $primary-background;
+    color: $primary-txt;
 }
 
 .bg-dark * {
