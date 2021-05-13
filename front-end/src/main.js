@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css";
-import "./app/styles/style.css";
+import "./app/styles/style.scss";
 
 import {Router} from "./app/utils/router";
 import {GameComponent} from "./app/components/game/game.component";
