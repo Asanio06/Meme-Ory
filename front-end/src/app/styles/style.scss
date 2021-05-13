@@ -1,6 +1,7 @@
 /*****
  * GLOBAL STYLE
  */
+@import "./color";
 
 body {
     background-color: #F5F5F5;
@@ -20,7 +21,7 @@ body > main {
 
 /* global style */
 .bg-primary * {
-    color: #cb2468;
+    color: $primary-background;
 }
 
 .bg-dark * {

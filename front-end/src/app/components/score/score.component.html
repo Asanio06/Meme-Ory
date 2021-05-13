@@ -1,13 +1,26 @@
-<main class="score-cmp">
-    <div class="d-flex p-3">
-        <div class="flex-grow-1">
-            <h3 class="congrats">CONGRATS<br/><span id="name"></span></h3>
+<main class="d-flex flex-row justify-content-center score-cmp" >
+    <div class="d-flex w-75 flex-column congrats-cadre" style="border-style: solid; border-width: 1px">
+        <div class="d-flex flex-row flex-wrap align-items-center justify-content-center m-1">
+            <div class="ml-auto">
+                <h3 class="congrats">CONGRATULATIONS<br/></h3>
+            </div>
+            <div class="ml-auto">
+                <img class="happy" src="./happy_homer.jpg">
+            </div>
         </div>
-        <div>
-            <img class="happy" src="./happy_homer.jpg">
-            <p class="size"><span id="size"></span> pairs</p>
-            <p class="time"><span id="time"></span>s</p>
+        <div class="d-flex flex-row justify-content-around align-items-center m-2">
+            <div class="d-flex flex-row result-cadre justify-content-center align-items-center w-25">
+                <span id="name"></span>
+            </div>
+            <div class="d-flex flex-row result-cadre justify-content-center align-items-center w-25">
+               <span id="size"></span> pairs
+            </div>
+            <div class="d-flex flex-row result-cadre justify-content-center align-items-center w-25">
+                <span id="time"></span> s
+            </div>
+
         </div>
     </div>
+
 </main>
 

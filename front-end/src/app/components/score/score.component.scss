@@ -1,10 +1,28 @@
-.score-cmp img.happy:hover {
-    /* Start the shake animation and make the animation last for 0.5 seconds */
-    animation: shake 0.5s;
+@import "../../styles/color";
+
+.score-cmp{
+    img{
+        &.happy{
+            &:hover{
+                /* Start the shake animation and make the animation last for 0.5 seconds */
+                animation: shake 0.5s;
 
 
-    /* When the animation is finished, start again */
-    animation-iteration-count: infinite;
+                /* When the animation is finished, start again */
+                animation-iteration-count: infinite;
+
+            }
+        }
+    }
+}
+.congrats-cadre{
+background-color: $primary;
+}
+.result-cadre{
+    background-color: $primary-light;
+    border-style: solid;
+    border-width: 1px;
+    font-weight: bold;
 }
 
 @keyframes shake {
