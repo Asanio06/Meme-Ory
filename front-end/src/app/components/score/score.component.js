@@ -19,6 +19,7 @@ export class ScoreComponent extends Component {
     }
 
     async init() {
+        await this._postScore();
         await deleteSaveInDataBase();
         await this._insertInformationInTable();
         document.getElementById('name').innerText = this.name;
@@ -31,7 +32,7 @@ export class ScoreComponent extends Component {
     }
 
     async _postScore(){
-        await fetch("http://localhost:8081/scores", {
+        return await fetch("http://localhost:8081/scores", {
             method: "POST",
             headers: {
                 Accept: "application/json",
