@@ -30,7 +30,6 @@ export class GameComponent extends Component {
         // fetch the cards configuration from the server
         let stateOfGame = await getSavedStateOfGame();
         let continueOnSaveData;
-        console.log(stateOfGame)
         if (stateOfGame) continueOnSaveData = confirm("Souhaitez vous continuez la partie précédente? (Cliquer sur Ok pour dire oui)");
         if (!continueOnSaveData) {
             await deleteSaveInDataBase();
@@ -46,7 +45,6 @@ export class GameComponent extends Component {
             this.lastFlippedCardId = stateOfGame.lastflippedCardId;
         }
 
-        console.log('merde ' +this.lastFlippedCardId )
 
 
         const config = await this.fetchConfig();
@@ -58,7 +56,6 @@ export class GameComponent extends Component {
         })
 
         this._boardElement = document.querySelector('.cards');
-        console.log(this._cards)
         this._cards.forEach((card) => {
             this._boardElement.appendChild(card.getElement());
             card.getElement().addEventListener('click', () => {
@@ -77,15 +74,12 @@ export class GameComponent extends Component {
                 }
                 // je ne met pas if (!this.lastFlippedCardId) par peur qu'il considere !0 = true
                 if(this.lastFlippedCardId !=null || this.lastFlippedCardId != undefined){ // Si le dernier flip est sauvegardé
-                    console.log('id save ' + this.lastFlippedCardId  )
 
                     // On recupere la derniere carte lorsque le cardSave nous permet de dire qu'elle etait retourné et que son id vaut celui de la derniere carte sauvegarder.
                     // En effet toutes les cartes sont en pairs mais seules une des 2 est retourné
                     const lastCardFlip = this._cards.findIndex(card => cardSave.flipped && card._id == this.lastFlippedCardId)
                     if(this._cards[lastCardFlip]){
                         this._flippedCard =  this._cards[lastCardFlip]
-                        console.log('Carte lip deernier')
-                        console.log(this._flippedCard )
                     }
                 }
 
@@ -155,16 +149,10 @@ export class GameComponent extends Component {
         if (!this._flippedCard) {
             // keep this card flipped, and wait for the second card of the pair
             this._flippedCard = card;
-            console.log('nooooooooooooooo')
         } else {
             // second card of the pair flipped...
-                console.log('Flipped card')
-            console.log(this._flippedCard)
-            console.log('carte')
-            console.log(card)
             // if cards are the same
             if (card.equals(this._flippedCard)) {
-                console.log("EGALITE")
                 this._flippedCard.matched = true;
                 card.matched = true;
                 this._matchedPairs += 1;

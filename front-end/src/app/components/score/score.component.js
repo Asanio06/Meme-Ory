@@ -52,9 +52,11 @@ export class ScoreComponent extends Component {
 
     async _insertInformationInTable(){
         const allScore = await this._getAllScore();
-        console.log(allScore)
-        // Rangement par ordre decroissant en fonction de size
-        allScore.sort((a, b) => (b.size > a.size) ? 1 : -1);
+        // Rangement de la liste
+        allScore.sort(function(a, b) {
+            return b.size - a.size || a.time - b.time;
+        });
+
         //classement-body
         let bodyOfTable = '';
         allScore.forEach((scoreInfo,index)=>{
