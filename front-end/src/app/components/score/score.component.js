@@ -1,6 +1,6 @@
 import "./score.component.scss"
 import template from "./score.component.html";
-import {parseUrl,formatTime} from "../../utils/utils";
+import {parseUrl,formatTime,deleteSaveInDataBase} from "../../utils/utils";
 import {Component} from "../../utils/component";
 
 const environment = {
@@ -19,6 +19,7 @@ export class ScoreComponent extends Component {
     }
 
     async init() {
+        await deleteSaveInDataBase();
         await this._insertInformationInTable();
         document.getElementById('name').innerText = this.name;
         document.getElementById('size').innerText = this.size;

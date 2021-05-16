@@ -4,7 +4,6 @@ import {deleteSaveInDataBase, getSavedStateOfGame, parseUrl, saveStateOfGame} fr
 import {Component} from "../../utils/component";
 
 
-
 const environment = {
     api: {
         host: 'http://localhost:8081'
@@ -44,6 +43,7 @@ export class GameComponent extends Component {
             this.listCardSave = stateOfGame.listCard;
             this.savetimeElapsedInSeconds = stateOfGame.timeElapsedInSeconds;
             this._matchedPairs = stateOfGame.matchedPairs;
+            this.lastFlippedCardId = stateOfGame.lastflippedCardId;
         }
 
         const config = await this.fetchConfig();
@@ -61,7 +61,7 @@ export class GameComponent extends Component {
             card.getElement().addEventListener('click', () => {
                 this._flipCard(card);
                 // Save the game state when the player flips a card
-                saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs);
+
             });
 
         })
@@ -72,8 +72,18 @@ export class GameComponent extends Component {
                 if (cardSave.flipped) {
                     this._flipCardFromSave(this._cards[cardId])
                 }
+                if(this.lastFlippedCardId !=null){ // Si le dernier flip est sauvegardé
+                    const lastCardFlip = this._cards.findIndex(card => card._flipped && cardSave.id == this.lastFlippedCardId)
+                    if(this._cards[lastCardFlip]){
+                        this._flippedCard =  this._cards[lastCardFlip]
+                        console.log(this._flippedCard )
+                    }
+                }
+
+
             })
         }
+
 
         this.start();
 
@@ -136,11 +146,16 @@ export class GameComponent extends Component {
         if (!this._flippedCard) {
             // keep this card flipped, and wait for the second card of the pair
             this._flippedCard = card;
+            console.log('nooooooooooooooo')
         } else {
             // second card of the pair flipped...
-
+                console.log('Flipped card')
+            console.log(this._flippedCard)
+            console.log('carte')
+            console.log(card)
             // if cards are the same
             if (card.equals(this._flippedCard)) {
+                console.log("EGALITE")
                 this._flippedCard.matched = true;
                 card.matched = true;
                 this._matchedPairs += 1;
@@ -164,12 +179,20 @@ export class GameComponent extends Component {
                     card.flip();
                     this._busy = false;
 
+
+                    saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs, this._flippedCard._id) // Sauvegar
                     // reset flipped card for the next turn.
                     this._flippedCard = null;
-                    saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs) // Sauvegar
-
                 }, 500);
             }
+        }
+
+        if(this._flippedCard){
+            saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs, this._flippedCard._id);
+        }else{
+            // Lorsque les cartes se matchent, il n'ya plus de flippedCard
+            saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs,null);
+
         }
 
     }
@@ -179,15 +202,6 @@ export class GameComponent extends Component {
 
         // flip the card
         card.flip();
-
-        this._flippedCard = card;
-        const numberOfCardFlip = this._cards.filter(card => {
-            return card._flipped === true;
-        })
-
-        if(numberOfCardFlip.length%2 ===0){
-            this._flippedCard = null;
-        }
 
         if (this._matchedPairs === this._size) {
             this.gotoScore();

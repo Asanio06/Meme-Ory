@@ -12,7 +12,7 @@ export function parseUrl() {
         }, {});
 }
 
-export function saveStateOfGame(listCard, userName, timeElapsedInSeconds,size,matchedPairs) {
+export function saveStateOfGame(listCard, userName, timeElapsedInSeconds,size,matchedPairs,lastflippedCardId) {
 
     listCard = listCard.map((card) => {
         const id = card._id;
@@ -28,10 +28,12 @@ export function saveStateOfGame(listCard, userName, timeElapsedInSeconds,size,ma
         userName,
         timeElapsedInSeconds,
         size,
-        matchedPairs
+        matchedPairs,
+        lastflippedCardId
     }
 
-    console.log( stateOfGame)
+    console.log( 'sauvegarde')
+    console.log(lastflippedCardId)
 
 
     localforage
