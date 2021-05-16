@@ -1,5 +1,7 @@
 # Memory
 
+Les réponses aux questions de TP sont disponibles dans le fichier `./reponseAuxQuestions/reponse.md`
+
 ## Installation
 
 Vous pouvez cloner le projets grâce aux commandes suivantes:
