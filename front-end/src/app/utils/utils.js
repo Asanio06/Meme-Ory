@@ -32,7 +32,7 @@ export function saveStateOfGame(listCard, userName, timeElapsedInSeconds,size,ma
         lastflippedCardId
     }
 
-    console.log( 'sauvegarde')
+    console.log( 'sauvegarde de lid du flip')
     console.log(lastflippedCardId)
 
 

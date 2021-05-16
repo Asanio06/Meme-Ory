@@ -32,7 +32,7 @@ export class ScoreComponent extends Component {
     }
 
     async _postScore(){
-        return await fetch("http://localhost:8081/scores", {
+        return await fetch("http://localhost:8081/scores?size", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -52,6 +52,9 @@ export class ScoreComponent extends Component {
 
     async _insertInformationInTable(){
         const allScore = await this._getAllScore();
+        console.log(allScore)
+        // Rangement par ordre decroissant en fonction de size
+        allScore.sort((a, b) => (b.size > a.size) ? 1 : -1);
         //classement-body
         let bodyOfTable = '';
         allScore.forEach((scoreInfo,index)=>{

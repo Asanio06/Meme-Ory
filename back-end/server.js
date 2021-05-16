@@ -166,6 +166,8 @@ app.get('/scores', (req, res) => {
         filteredScores = filteredScores.filter(score => score.name === name);
     }
 
+
+
     res.json(filteredScores);
 });
 

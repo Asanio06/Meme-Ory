@@ -46,6 +46,9 @@ export class GameComponent extends Component {
             this.lastFlippedCardId = stateOfGame.lastflippedCardId;
         }
 
+        console.log('merde ' +this.lastFlippedCardId )
+
+
         const config = await this.fetchConfig();
         this._config = config;
 
@@ -55,7 +58,7 @@ export class GameComponent extends Component {
         })
 
         this._boardElement = document.querySelector('.cards');
-
+        console.log(this._cards)
         this._cards.forEach((card) => {
             this._boardElement.appendChild(card.getElement());
             card.getElement().addEventListener('click', () => {
@@ -72,10 +75,16 @@ export class GameComponent extends Component {
                 if (cardSave.flipped) {
                     this._flipCardFromSave(this._cards[cardId])
                 }
-                if(this.lastFlippedCardId !=null){ // Si le dernier flip est sauvegardé
-                    const lastCardFlip = this._cards.findIndex(card => card._flipped && cardSave.id == this.lastFlippedCardId)
+                // je ne met pas if (!this.lastFlippedCardId) par peur qu'il considere !0 = true
+                if(this.lastFlippedCardId !=null || this.lastFlippedCardId != undefined){ // Si le dernier flip est sauvegardé
+                    console.log('id save ' + this.lastFlippedCardId  )
+
+                    // On recupere la derniere carte lorsque le cardSave nous permet de dire qu'elle etait retourné et que son id vaut celui de la derniere carte sauvegarder.
+                    // En effet toutes les cartes sont en pairs mais seules une des 2 est retourné
+                    const lastCardFlip = this._cards.findIndex(card => cardSave.flipped && card._id == this.lastFlippedCardId)
                     if(this._cards[lastCardFlip]){
                         this._flippedCard =  this._cards[lastCardFlip]
+                        console.log('Carte lip deernier')
                         console.log(this._flippedCard )
                     }
                 }
@@ -180,9 +189,10 @@ export class GameComponent extends Component {
                     this._busy = false;
 
 
-                    saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs, this._flippedCard._id) // Sauvegar
                     // reset flipped card for the next turn.
                     this._flippedCard = null;
+                    saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs, null) // Sauvegar
+
                 }, 500);
             }
         }
@@ -202,7 +212,7 @@ export class GameComponent extends Component {
 
         // flip the card
         card.flip();
-
+        //this._flippedCard = card;
         if (this._matchedPairs === this._size) {
             this.gotoScore();
         }
