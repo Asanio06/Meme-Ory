@@ -1,7 +1,8 @@
 import {CardComponent} from "./card/card.component";
 import template from "./game.component.html"
-import {parseUrl} from "../../utils/utils";
+import {deleteSaveInDataBase, getSavedStateOfGame, parseUrl, saveStateOfGame} from "../../utils/utils";
 import {Component} from "../../utils/component";
+
 
 
 const environment = {
@@ -21,29 +22,58 @@ export class GameComponent extends Component {
         this._size = parseInt(params.size) || 9;
         this._flippedCard = null;
         this._matchedPairs = 0;
+        this.savetimeElapsedInSeconds = 0;
+
     }
 
     async init() {
+
         // fetch the cards configuration from the server
+        let stateOfGame = await getSavedStateOfGame();
+        let continueOnSaveData;
+        console.log(stateOfGame)
+        if (stateOfGame) continueOnSaveData = confirm("Souhaitez vous continuez la partie précédente? (Cliquer sur Ok pour dire oui)");
+        if (!continueOnSaveData) {
+            await deleteSaveInDataBase();
+            stateOfGame = null;
+        }
+
+        if (stateOfGame) {
+            this._name = stateOfGame.userName;
+            this._size = stateOfGame.size;
+            this.listCardSave = stateOfGame.listCard;
+            this.savetimeElapsedInSeconds = stateOfGame.timeElapsedInSeconds;
+            this._matchedPairs = stateOfGame.matchedPairs;
+        }
 
         const config = await this.fetchConfig();
         this._config = config;
 
         // create a card out of the config
-
         this._cards = this._config.ids.map((id) => {
             return new CardComponent(id);
         })
 
         this._boardElement = document.querySelector('.cards');
 
-
         this._cards.forEach((card) => {
             this._boardElement.appendChild(card.getElement());
             card.getElement().addEventListener('click', () => {
-                this._flipCard(card)
+                this._flipCard(card);
+                // Save the game state when the player flips a card
+                saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs);
             });
+
         })
+
+        if (this.listCardSave) {
+            this.listCardSave.forEach((cardSave) => {
+                const cardId = this._cards.findIndex(card => card._id == cardSave.id && !card._flipped);
+                if (cardSave.flipped) {
+                    this._flipCardFromSave(this._cards[cardId])
+                }
+            })
+        }
 
         this.start();
 
@@ -52,8 +82,9 @@ export class GameComponent extends Component {
 
 
     start() {
-        this._startTime = Date.now();
-        let seconds = 0;
+        this._startTime = Date.now(); // the value is initialized in the init function when a save
+        let seconds = 0 + this.savetimeElapsedInSeconds;
+
         document.querySelector('nav .navbar-title').textContent = `Player: ${this._name}. Elapsed time: ${seconds++}`;
 
         this._timer = setInterval(() => {
@@ -74,12 +105,17 @@ export class GameComponent extends Component {
     }
 
     gotoScore() {
-        const timeElapsedInSeconds = Math.floor((Date.now() - this._startTime) / 1000);
-        clearInterval(this._timer);
 
+        const timeElapsedInSeconds = this._getTimeElapsedInSeconds();
+        clearInterval(this._timer);
         setTimeout(() => {
             window.location.hash = `score?name=${this._name}&size=${this._size}&time=${timeElapsedInSeconds}`;
         }, 750);
+    }
+
+    _getTimeElapsedInSeconds() {
+        if (!this._startTime) this._startTime = Date.now(); // Initialisation de startTime si la fonction start n'a pas été lancé
+        return Math.floor((Date.now() - this._startTime) / 1000 + this.savetimeElapsedInSeconds);
     }
 
     _flipCard(card) {
@@ -95,6 +131,7 @@ export class GameComponent extends Component {
         // flip the card
         card.flip();
 
+
         // if flipped first card of the pair
         if (!this._flippedCard) {
             // keep this card flipped, and wait for the second card of the pair
@@ -108,11 +145,13 @@ export class GameComponent extends Component {
                 card.matched = true;
                 this._matchedPairs += 1;
 
+
                 // reset flipped card for the next turn.
                 this._flippedCard = null;
 
                 if (this._matchedPairs === this._size) {
-                    this.gotoScore();
+                    deleteSaveInDataBase().then(() => this.gotoScore())
+
                 }
             } else {
                 this._busy = true;
@@ -127,14 +166,39 @@ export class GameComponent extends Component {
 
                     // reset flipped card for the next turn.
                     this._flippedCard = null;
+                    saveStateOfGame(this._cards, this._name, this._getTimeElapsedInSeconds(), this._size, this._matchedPairs) // Sauvegar
+
                 }, 500);
             }
         }
+
+    }
+
+    _flipCardFromSave(card) {
+
+
+        // flip the card
+        card.flip();
+
+        this._flippedCard = card;
+        const numberOfCardFlip = this._cards.filter(card => {
+            return card._flipped === true;
+        })
+
+        if(numberOfCardFlip.length%2 ===0){
+            this._flippedCard = null;
+        }
+
+        if (this._matchedPairs === this._size) {
+            this.gotoScore();
+        }
+
     }
 
     getTemplate() {
         return template;
     }
+
 }
 
 
