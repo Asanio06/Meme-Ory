@@ -161,10 +161,9 @@ export class GameComponent extends Component {
                 // reset flipped card for the next turn.
                 this._flippedCard = null;
 
-                if (this._matchedPairs === this._size) {
-                    deleteSaveInDataBase().then(() => this.gotoScore())
+                if (this._matchedPairs === this._size) this.gotoScore();
 
-                }
+
             } else {
                 this._busy = true;
 
