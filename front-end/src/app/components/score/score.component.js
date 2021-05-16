@@ -1,8 +1,13 @@
 import "./score.component.scss"
 import template from "./score.component.html";
-import {parseUrl,deleteSaveInDataBase} from "../../utils/utils";
+import {parseUrl,formatTime} from "../../utils/utils";
 import {Component} from "../../utils/component";
 
+const environment = {
+    api: {
+        host: 'http://localhost:8081'
+    }
+};
 /* class ScoreComponent constructor */
 export class ScoreComponent extends Component {
     constructor() {
@@ -13,8 +18,8 @@ export class ScoreComponent extends Component {
         this.time = parseInt(params.time);
     }
 
-    init() {
-        deleteSaveInDataBase();
+    async init() {
+        await this._insertInformationInTable();
         document.getElementById('name').innerText = this.name;
         document.getElementById('size').innerText = this.size;
         document.getElementById('time').innerText = this.time;
@@ -23,6 +28,43 @@ export class ScoreComponent extends Component {
     getTemplate() {
         return template;
     }
+
+    async _postScore(){
+        await fetch("http://localhost:8081/scores", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: this.name, time: this.time, size: this.size }),
+        });
+
+    }
+
+    async _getAllScore(){
+        return await fetch(`${environment.api.host}/scores`, {
+            method: "GET",
+        }).then((response) => response.json());
+
+    }
+
+    async _insertInformationInTable(){
+        const allScore = await this._getAllScore();
+        //classement-body
+        let bodyOfTable = '';
+        allScore.forEach((scoreInfo,index)=>{
+            bodyOfTable += `<tr>
+                <th scope="row">${index+1}</th>
+                <td>${scoreInfo.name}</td>
+                <td>${scoreInfo.size}</td>
+                <td>${formatTime(scoreInfo.time)}</td>
+            </tr>`;
+
+        })
+        document.getElementById('classement-body').innerHTML = bodyOfTable;
+    }
+
+
 
 
 }
